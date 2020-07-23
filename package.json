@@ -9,10 +9,12 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
+    "@react-native-community/cli": "^4.10.1",
     "@react-native-community/masked-view": "0.1.10",
     "expo": "~38.0.8",
     "expo-font": "~8.2.1",
     "expo-status-bar": "^1.0.2",
+    "logkitty": "^0.7.1",
     "moment": "^2.27.0",
     "react": "~16.11.0",
     "react-dom": "~16.11.0",
@@ -26,10 +28,11 @@
     "react-navigation-header-buttons": "^4.0.2",
     "react-navigation-stack": "^2.8.2",
     "react-redux": "^7.2.0",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.6",
+    "@babel/core": "^7.10.5",
     "babel-preset-expo": "~8.1.0"
   },
   "private": true

@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
-import MainNavigator from './navigation/MainNavigator';
+import NavigationContainer from './navigation/NavigationContainer';
 
 import productsReducer from './store/reducers/productsReducer';
 import cartReducer from './store/reducers/cartReducer';
 import orderReducer from './store/reducers/orderReducer';
+import authReducer from './store/reducers/authReducer';
 
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import ReduxThunk from 'redux-thunk';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 
 const rootReducer = combineReducers({
   products: productsReducer,
   cart: cartReducer,
-  order: orderReducer
+  order: orderReducer,
+  auth: authReducer
 });
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer,applyMiddleware(ReduxThunk));
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -39,7 +42,7 @@ export default function App() {
     );
   }
   return <Provider store={store} >
-    <MainNavigator />
+    <NavigationContainer />
   </Provider>
 
 };

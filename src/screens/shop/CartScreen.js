@@ -1,12 +1,16 @@
-import React from 'react';
-import { View, StyleSheet, Text, Button, FlatList, Platform } from 'react-native';
+import React, { useCallback, useState, useEffect } from 'react';
+import { View, StyleSheet, Text, Button, FlatList, Platform, ActivityIndicator, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import CartItem from '../../components/CartItem';
 import Colors from '../../../constants/Colors';
 import * as cartActions from '../../../store/actions/cartActions';
 import * as orderActions from '../../../store/actions/orderActions';
+import Card from '../../components/UI/Card';
 
 const CartScreen = ({ navigation }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState();
+
     const cartTotalAmount = useSelector(state => state.cart.totalAmount);
     const cartItems = useSelector(state => {
         const transformedCartItems = [];
@@ -24,21 +28,48 @@ const CartScreen = ({ navigation }) => {
 
     const dispatch = useDispatch();
 
+    const orderHandler = useCallback(async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            await dispatch(orderActions.addNewOrder(cartItems, cartTotalAmount));
+        }
+        catch (err) {
+            setError(err.message);
+        }
+        setIsLoading(false);
+    },
+        [dispatch, setError, setIsLoading, cartItems, cartTotalAmount]
+    )
+
+    useEffect(() => {
+        if (error) {
+            Alert.alert('error Occured:', error, [{
+                text: 'Ok', style: 'default',
+                onPress: () => {setError(null);}
+            }]);
+        }
+    }, [error]);
+
+
 
     return (
         <View style={styles.screen}>
-            <View style={styles.summary}>
+            <Card style={styles.summary}>
                 <Text style={styles.summaryText}>
                     Total:{' '}
                     <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text>
                 </Text>
-                <Button
-                    color={Platform.OS === 'ios' ? Colors.accent : Colors.secondary}
-                    title="Order Now"
-                    disabled={cartItems.length === 0}
-                    onPress={() => { dispatch(orderActions.addNewOrder(cartItems, cartTotalAmount)); }}
-                />
-            </View>
+                {isLoading ?
+                    <ActivityIndicator size='large' color={Colors.primary} /> :
+                    <Button
+                        color={Platform.OS === 'ios' ? Colors.accent : Colors.secondary}
+                        title="Order Now"
+                        disabled={cartItems.length === 0}
+                        onPress={orderHandler}
+                    />
+                }
+            </Card>
 
             <FlatList
                 data={cartItems}
@@ -71,13 +102,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 20,
         padding: 10,
-        shadowColor: 'black',
-        shadowOpacity: 0.26,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 8,
-        elevation: 5,
-        borderRadius: 10,
-        backgroundColor: 'white'
+        
     },
     summaryText: {
         fontFamily: 'open-sans-bold',
@@ -85,6 +110,11 @@ const styles = StyleSheet.create({
     },
     amount: {
         color: Colors.primary
+    },
+    centered: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 

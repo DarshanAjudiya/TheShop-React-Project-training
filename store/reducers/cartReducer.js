@@ -10,6 +10,7 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+
     case ADD_TO_CART:
       const addedProduct = action.product;
       const prodPrice = addedProduct.price;
@@ -69,14 +70,19 @@ export default (state = initialState, action) => {
       return initialState;
 
     case DELETE_PRODUCT:
-      const sum = state.items[action.pid].sum;
-      const updatedItems = state.items;
-      delete updatedItems[action.pid];
-      return {
-        ...state,
-        items: updatedItems,
-        totalAmount: state.totalAmount - sum
+      const id = action.pid;
+      if (state.items[id]) {
+        const sum = state.items[id].sum;
+        const updatedItems = state.items;
+        delete updatedItems[action.pid];
+        return {
+          ...state,
+          items: updatedItems,
+          totalAmount: state.totalAmount - sum
+        };
       }
+      return state;
+
     default:
       return state;
   }
