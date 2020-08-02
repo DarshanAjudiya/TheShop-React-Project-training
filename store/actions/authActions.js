@@ -2,12 +2,18 @@ import { AsyncStorage } from "react-native";
 
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const LOGOUT = 'LOGOUT';
+export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
 
 let timer;
 
+
+export const setDidTryAl = () => {
+    return { type: SET_DID_TRY_AL };
+};
+
 export const authenticate = (token, userId, expirationTime) => {
     return dispatch => {
-        dispatch({ type: AUTHENTICATE, token: token, userId: userId});
+        dispatch({ type: AUTHENTICATE, token: token, userId: userId });
         dispatch(setLogoutTimer(expirationTime))
     };
 };
@@ -106,13 +112,12 @@ const setLogoutTimer = (expirationTime) => {
     return dispatch => {
         timer = setTimeout(() => {
             dispatch(logout());
-        }, expirationTime/100);
+        }, expirationTime );
     };
 };
 
 const saveTostorage = (token, userId, expiresIn) => {
     const expirationDate = new Date(new Date().getTime() + parseInt(expiresIn) * 1000);
-    console.log(`in savetoStorage : ${expirationDate},  , ${expiresIn}`);
 
     AsyncStorage.setItem('userCredentials',
         JSON.stringify({

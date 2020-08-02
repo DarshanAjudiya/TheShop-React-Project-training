@@ -36,9 +36,9 @@ const ProductOverviewScreen = ({ navigation }) => {
   }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
-    const listener = navigation.addListener('willFocus', loadProducts);
+    const unsubscribe = navigation.addListener('focus', loadProducts);
     return () => {
-      listener.remove();
+      unsubscribe();
     };
   }, [loadProducts]);
 
@@ -105,7 +105,7 @@ const ProductOverviewScreen = ({ navigation }) => {
   );
 };
 
-ProductOverviewScreen.navigationOptions = ({ navigation }) => {
+export const productOverviewScreenOptions = ({ navigation }) => {
   return {
     headerTitle: 'All Products',
     headerRight: () => {

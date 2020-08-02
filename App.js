@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import NavigationContainer from './navigation/NavigationContainer';
+import AppNavigator from './navigation/AppNavigator';
 
 import productsReducer from './store/reducers/productsReducer';
 import cartReducer from './store/reducers/cartReducer';
@@ -42,7 +42,7 @@ export default function App() {
     );
   }
   return <Provider store={store} >
-    <NavigationContainer />
+    <AppNavigator />
   </Provider>
 
 };

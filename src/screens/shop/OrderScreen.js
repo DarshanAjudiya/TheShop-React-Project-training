@@ -28,9 +28,9 @@ const OrderScreen = ({ navigation }) => {
   }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
-    const listener = navigation.addListener('willFocus', loadOrders);
+    const unsubscriber = navigation.addListener('focus', loadOrders);
     return () => {
-      listener.remove();
+      unsubscriber();
     };
   }, [loadOrders]);
 
@@ -78,7 +78,7 @@ const OrderScreen = ({ navigation }) => {
   );
 };
 
-OrderScreen.navigationOptions = ({ navigation }) => {
+export const orderScreenOptions = ({ navigation }) => {
   return {
     headerTitle: 'Your Orders',
     headerLeft: () => {

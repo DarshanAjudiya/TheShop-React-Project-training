@@ -6,8 +6,8 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../../components/UI/HeaderButton';
 import * as cartActions from '../../../store/actions/cartActions';
 
-const ProductDetailScreen = ({ navigation }) => {
-    const productId = navigation.getParam('productId');
+const ProductDetailScreen = ({ route }) => {
+    const productId = route.params.productId;
     const selectedProduct = useSelector(state => {
        return state.products.availableProducts.find(prod => prod.id === productId)
     });
@@ -31,9 +31,9 @@ const ProductDetailScreen = ({ navigation }) => {
     );
 };
 
-ProductDetailScreen.navigationOptions = ({navigation}) => {
+export const productDetailScreenOptions = ({navigation, route}) => {
     return {
-        headerTitle: navigation.getParam('productTitle'),
+        headerTitle: route.params.productTitle,
         headerRight: () => {
             return <HeaderButtons HeaderButtonComponent={HeaderButton}>
               <Item title='Cart' iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} onPress={() => { navigation.navigate('Cart'); }} />

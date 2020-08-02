@@ -12,7 +12,8 @@ const SplashScreen = ({ navigation }) => {
         const tryLogin = async () => {
             const userData = await AsyncStorage.getItem('userCredentials');
             if (!userData) {
-                navigation.navigate('Auth');
+                // navigation.navigate('Auth');
+                dispatch(authActions.setDidTryAl());
                 return;
             }
             const transformedData = JSON.parse(userData);
@@ -21,11 +22,12 @@ const SplashScreen = ({ navigation }) => {
             const currentDate = new Date();
             if (expiration <= currentDate || !token || !userId )
             {
-                navigation.navigate('Auth');
+                // navigation.navigate('Auth');
+                dispatch(authActions.setDidTryAl());
                 return;
             }
             const expirationTime = expiration.getTime() - currentDate.getTime();
-            navigation.navigate('Shop'); 
+            // navigation.navigate('Shop'); 
 
             dispatch(authActions.authenticate(token,userId,expirationTime));
             
@@ -34,7 +36,7 @@ const SplashScreen = ({ navigation }) => {
     }, []);
 
     return (
-        <View>
+        <View style = {styles.centered}>
             <ActivityIndicator size='large' color={Colors.primary} />
         </View>
     );

@@ -54,9 +54,9 @@ const UserProductScreen = ({ navigation }) => {
     }, [dispatch, setError]);
 
     useEffect(() => {
-        const listener = navigation.addListener('willFocus', loadProducts);
+        const unsubscribe = navigation.addListener('focus', loadProducts);
         return () => {
-            listener.remove();
+            unsubscribe();
         };
     }, [loadProducts]);
 
@@ -79,11 +79,11 @@ const UserProductScreen = ({ navigation }) => {
     if (userProducts.length === 0) {
         return (<View style={styles.centered}>
             <Text style={styles.text}>No Products available</Text>
-                    <Text style={styles.text}>Try adding some</Text>
+            <Text style={styles.text}>Try adding some</Text>
             <TouchableOpacity onPress={() => navigation.navigate('EditProduct')}>
                 <View style={{ alignItems: 'center' }}>
                     <Ionicons name={Platform.OS === 'android' ? 'md-create' : 'ios-create'} size={24} color={Colors.primary} />
-                    <Text style={{color:Colors.primary}}>Add New Product</Text>
+                    <Text style={{ color: Colors.primary }}>Add New Product</Text>
                 </View>
             </TouchableOpacity>
         </View>
@@ -119,7 +119,7 @@ const UserProductScreen = ({ navigation }) => {
     );
 };
 
-UserProductScreen.navigationOptions = ({ navigation }) => {
+export const UserProductScreenOptions = ({ navigation }) => {
     return {
         headerTitle: 'Your Products',
         headerLeft: () => {

@@ -32,11 +32,11 @@ const formReducer = (state, action) => {
     return state;
 };
 
-const EditProductScreen = ({ navigation }) => {
+const EditProductScreen = ({ navigation, route }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
 
-    const pid = navigation.getParam('pid');
+    const pid = route.params ? route.params.pid : null;
     const editedProduct = useSelector(state => state.products.userProducts.find(product => product.id === pid));
     const dispatch = useDispatch();
 
@@ -89,7 +89,19 @@ const EditProductScreen = ({ navigation }) => {
     );
 
     useEffect(() => {
-        navigation.setParams({ 'submit': submitFn });
+        navigation.setOptions({
+            headerRight: () => {
+                return <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                    <Item
+                        title="Save"
+                        iconName={
+                            Platform.OS === 'android' ? 'md-checkmark-circle-outline' : 'ios-checkmark-circle-outline'
+                        }
+                        onPress={submitFn}
+                    />
+                </HeaderButtons>
+            }
+        });
     },
         [submitFn]
     );
@@ -185,23 +197,13 @@ const EditProductScreen = ({ navigation }) => {
         </KeyboardAvoidingView>
     );
 };
-EditProductScreen.navigationOptions = ({ navigation }) => {
-    const submitFn = navigation.getParam('submit');
+export const EditProductScreenOptions = ({ route }) => {
+    const routeParams = route.params ? route.params : {};
     return {
-        headerTitle: navigation.getParam('pid')
+        headerTitle: routeParams.pid
             ? 'Edit Product'
-            : 'Add Product',
-        headerRight: () => {
-            return <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item
-                    title="Save"
-                    iconName={
-                        Platform.OS === 'android' ? 'md-checkmark-circle-outline' : 'ios-checkmark-circle-outline'
-                    }
-                    onPress={submitFn}
-                />
-            </HeaderButtons>
-        }
+            : 'Add Product'
+
     };
 };
 
